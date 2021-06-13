@@ -3,6 +3,7 @@ import accept from './accept.json'
 import init from 'raw-loader!./html/init.html'
 import currentinit from 'html-loader!./html/currentinit.html'
 import gres from './src/gres'
+import recaptcha from './src/recaptcha'
 addEventListener("fetch", event => {
     event.respondWith(ipfscloud(event.request))
 })
@@ -19,6 +20,16 @@ async function ipfscloud(req) {
         case '/get':
             return fetch(`https://ipfs.io/ipfs/${sq('hash')}`)
         case '/upload':
+            if(!sq('token')){
+                return gres({ type: "json", ctx: { code: -1, success: false },msg:"人机验证结果不存在！"})
+            }
+            if(!await recaptcha(
+                TOKEN,
+                sq('token'),
+                'ipfs_photo'
+            )){
+                return gres({ type: "json", ctx: { code: -1, success: false },msg:"人机验证不通过，请使用合法的网络环境"})
+            }
             try {
                 const SHARELIST = await KV.get('PHOTOSHARE', { type: "json" })
                 const res = await (await (fetch('https://cf2vercel.vercel.app/api/v0/add?pin=true', req))).json()

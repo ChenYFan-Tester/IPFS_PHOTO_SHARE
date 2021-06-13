@@ -9,7 +9,11 @@
 	<link href='https://fonts.geekzu.org/css?family=Source+Sans+Pro:400,300,700,400italic' rel='stylesheet'
 		type='text/css'>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ChenYFan-Tester/ipfscloud/css/style.css">
-	<!-- Resource style -->
+	<style>
+		.grecaptcha-badge {
+			display: none !important;
+		}
+	</style>
 	<script src="https://cdn.jsdelivr.net/gh/ChenYFan-Tester/ipfscloud/js/modernizr.js"></script> <!-- Modernizr -->
 </head>
 
@@ -37,7 +41,7 @@
 				<a class='cd-btn' href="javascript:document.getElementById('file').click();">上传文件</a>
 				<input type="file" id="file" style="display:none">
 			</div>
-			<a href="javascript:void(0)" data-action="show-projects">查看分享</a>
+			<a class='cd-btn' href="javascript:void(0)" data-action="show-projects">查看分享</a>
 		</div>
 	</div>
 
@@ -51,8 +55,8 @@
 			<li><a href="#0" class="next">下一个</a></li>
 		</ul>
 	</div> <!-- .cd-projects-wrapper -->
-
-
+	<script src="https://recaptcha.net/recaptcha/api.js?render=6Lc6tp8aAAAAAO7y-YkhZQ3eYYt8FZnBi873CTGD"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery@2.1.1"></script>
 	<script src="https://cdn.jsdelivr.net/gh/ChenYFan-Tester/ipfscloud/js/jquery.mobile.custom.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/gh/ChenYFan-Tester/ipfscloud/js/main.js"></script>
@@ -60,15 +64,30 @@
 		window.replaceimg = (id, url) => {
 			document.getElementById(id).src = url
 		};
-		document.getElementById('file').addEventListener('change', async() => {
-			var formdata = new FormData();
-			formdata.append("file", document.getElementById("file").files[0]);
-			const p = await(await fetch('/upload', { method: 'POST', body: formdata })).json()
-			if(p.ctx.success){
-				alert('上传成功！')
-			}else{
-				alert('上传失败！')
-			}
+		document.getElementById('file').addEventListener('change', async () => {
+
+			try { swal.close() } catch (p) { }
+			swal({ title: "\n人机验证中...", icon: "https://cdn.jsdelivr.net/gh/HexoPlusPlus/CDN@db63c79/loading.gif", text: "\n", button: false, closeModal: false, });
+
+			grecaptcha.ready(() => {
+				grecaptcha.execute('6Lc6tp8aAAAAAO7y-YkhZQ3eYYt8FZnBi873CTGD', { action: 'ipfs_photo' }).then(async (token) => {
+
+
+					try { swal.close() } catch (p) { }
+					swal({ title: "\n上传中...", icon: "https://cdn.jsdelivr.net/gh/HexoPlusPlus/CDN@db63c79/loading.gif", text: "\n", button: false, closeModal: false, });
+					var formdata = new FormData();
+					formdata.append("file", document.getElementById("file").files[0]);
+					const p = await (await fetch(`/upload?token=${token}`, { method: 'POST', body: formdata })).json()
+					if (p.ctx.success) {
+						try { swal.close() } catch (p) { }
+						swal("成功！", "你的文件已上传，刷新即可在分享区查看您上传的图片", "success");
+					} else {
+						try { swal.close() } catch (p) { }
+						swal("失败！！", p.msg, "error");
+					}
+
+				});
+			});
 		})
 	</script>
 </body>
