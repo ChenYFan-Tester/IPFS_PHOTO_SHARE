@@ -1,6 +1,6 @@
 import sjcl from 'sjcl'
 import index from 'html-loader!./index.html'
-import { accept_suffix, accept_length, accept_size, upload_url, recap_mirror, encry } from './config.json'
+import { accept_suffix, accept_length, accept_size, upload_url, recap_mirror, encry,ipfs_url } from './config.json'
 import init from 'raw-loader!./html/init.html'
 import currentinit from 'html-loader!./html/currentinit.html'
 import gres from './src/gres'
@@ -26,9 +26,9 @@ async function ipfscloud(req) {
     switch (rp(path)) {
         case '/get':
             if (sq('en') === 'true') {
-                return fetch(`https://ipfs.io/ipfs/${sjcl.decrypt(PASSKEY, atob(sq('hash')))}`)
+                return fetch(`${ipfs_url}${sjcl.decrypt(PASSKEY, atob(sq('hash')))}`)
             } else {
-                return fetch(`https://ipfs.io/ipfs/${sq('hash')}`)
+                return fetch(`${ipfs_url}${sq('hash')}`)
             }
         case '/custom':
             return gres({
@@ -44,7 +44,7 @@ async function ipfscloud(req) {
                 type: "js"
             })
         case '/upload':
-            /*
+            
             if (!sq('token')) {
                 return gres({ type: "json", ctx: { code: -1, success: false }, msg: "人机验证结果不存在！" })
             }
@@ -54,7 +54,7 @@ async function ipfscloud(req) {
                 'ipfs_photo'
             )) {
                 return gres({ type: "json", ctx: { code: -1, success: false }, msg: "人机验证不通过，请使用合法的网络环境" })
-            }*/
+            }
 
             try {
                 const SHARELIST = await KV.get('PHOTOSHARE', { type: "json" })
@@ -92,12 +92,11 @@ async function ipfscloud(req) {
                 for (var i in SHARELIST) {
                     if (piclist.indexOf(SHARELIST[i].hash) === -1) {
                         y = init
-                            .replace(/<!--HASH-->/g, SHARELIST[i].hash)
-                            .replace(/<!--URL-->/g, (() => {
+                            .replace(/<!--HASH-->/g, (() => {
                                 if (encry) {
-                                    return `https://${domain}/get?hash=${btoa(sjcl.encrypt(PASSKEY, SHARELIST[i].hash))}&en=true`
+                                    return btoa(sjcl.encrypt(PASSKEY, SHARELIST[i].hash))
                                 } else {
-                                    return `https://${domain}/get?hash=${SHARELIST[i].hash}&en=false`
+                                    return SHARELIST[i].hash
                                 }
                             })())
                             .replace(/<!--NAME-->/g, SHARELIST[i].name)
@@ -105,7 +104,7 @@ async function ipfscloud(req) {
                         piclist.push(SHARELIST[i].hash)
                     }
                 }
-                return y
+                return y.replace(/<!--EN-->/g,encry?'true':'false')
             })()}`
             return gres({
                 ctx: index

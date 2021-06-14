@@ -1,8 +1,8 @@
 (async () => {
 
     
-    window.replaceimg = (id, url) => {
-        document.getElementById(id).src = url
+    window.replaceimg = (hash, en) => {
+        document.getElementById(hash).src = `/get?hash=${hash}&en=${en==='true'?'true':'false'}`
     };
     loadJS('<!--RECAP_URL-->?render=<!--RECAP-->',()=>{})
     document.getElementById('file').addEventListener('change', async () => {

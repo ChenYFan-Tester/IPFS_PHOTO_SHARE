@@ -31,6 +31,7 @@ KV的写入次数是有限的，避免被滥用和盗刷，我们强制开启了
 - `accept_size` 接受的文件最大大小 `Number`
 - `accept_size` 接受的文件名最长长度 `Number`
 - `upload_url` 由于`infura`官方api屏蔽了CloudFlareWorker的出口节点,此url为其反代,您也可以自建 `String`
+- `ipfs_url` ipfs镜像地址，Worker建议用CloudFlare提供的ipfs地址，您也可以自建 `String`
 - `recap_mirror` 人机验证是否开启镜像,在中国大陆内必须开启 `Boolean`
 - `recap_score` 人机验证最低分数,建议`0.4~0.7` `Number`
-- `encry` 加密hash，使其无法获得直链，必须在此站点内使用 `Boolean`
+- `encry` 加密hash，使其无法获得直链，必须在此站点内使用**加密会严重拖慢程序运行时间，当出现500错误时，请尝试将此设置为false** `Boolean`
