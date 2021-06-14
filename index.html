@@ -13,6 +13,12 @@
 		.grecaptcha-badge {
 			display: none !important;
 		}
+
+		@media only screen and (max-width: 900px) {
+			.unset {
+				transform: unset !important;
+			}
+		}
 	</style>
 	<script src="https://cdn.jsdelivr.net/gh/ChenYFan-Tester/ipfscloud/js/modernizr.js"></script> <!-- Modernizr -->
 </head>
@@ -55,40 +61,50 @@
 			<li><a href="#0" class="next">下一个</a></li>
 		</ul>
 	</div> <!-- .cd-projects-wrapper -->
-	<script src="https://recaptcha.net/recaptcha/api.js?render=6Lc6tp8aAAAAAO7y-YkhZQ3eYYt8FZnBi873CTGD"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery@2.1.1"></script>
 	<script src="https://cdn.jsdelivr.net/gh/ChenYFan-Tester/ipfscloud/js/jquery.mobile.custom.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/gh/ChenYFan-Tester/ipfscloud/js/main.js"></script>
 	<script>
-		window.replaceimg = (id, url) => {
-			document.getElementById(id).src = url
-		};
-		document.getElementById('file').addEventListener('change', async () => {
+		window.loadJS = (url, callback) => {
 
-			try { swal.close() } catch (p) { }
-			swal({ title: "\n人机验证中...", icon: "https://cdn.jsdelivr.net/gh/HexoPlusPlus/CDN@db63c79/loading.gif", text: "\n", button: false, closeModal: false, });
+			var script = document.createElement('script'),
 
-			grecaptcha.ready(() => {
-				grecaptcha.execute('6Lc6tp8aAAAAAO7y-YkhZQ3eYYt8FZnBi873CTGD', { action: 'ipfs_photo' }).then(async (token) => {
+				fn = callback || function () { };
 
+			script.type = 'text/javascript';
 
-					try { swal.close() } catch (p) { }
-					swal({ title: "\n上传中...", icon: "https://cdn.jsdelivr.net/gh/HexoPlusPlus/CDN@db63c79/loading.gif", text: "\n", button: false, closeModal: false, });
-					var formdata = new FormData();
-					formdata.append("file", document.getElementById("file").files[0]);
-					const p = await (await fetch(`/upload?token=${token}`, { method: 'POST', body: formdata })).json()
-					if (p.ctx.success) {
-						try { swal.close() } catch (p) { }
-						swal("成功！", "你的文件已上传，刷新即可在分享区查看您上传的图片", "success");
-					} else {
-						try { swal.close() } catch (p) { }
-						swal("失败！！", p.msg, "error");
+			if (script.readyState) {
+
+				script.onreadystatechange = function () {
+
+					if (script.readyState == 'loaded' || script.readyState == 'complete') {
+
+						script.onreadystatechange = null;
+
+						fn();
+
 					}
 
-				});
-			});
-		})
+				};
+
+			} else {
+
+
+				script.onload = function () {
+
+					fn();
+
+				};
+
+			}
+
+			script.src = url;
+
+			document.getElementsByTagName('head')[0].appendChild(script);
+
+		}
+		loadJS('/custom', () => { console.log('JS已加载') })
 	</script>
 </body>
 

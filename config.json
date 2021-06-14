@@ -1,0 +1,15 @@
+{
+    "accept_suffix": [
+        ".jpg",
+        ".png",
+        ".gif",
+        ".jpeg",
+        ".webp"
+    ],
+    "accept_size":104857600,
+    "accept_length":20,
+    "upload_url": "https://cf2vercel.vercel.app/api/v0/add?pin=true",
+    "recap_mirror": true,
+    "recap_score": 0.6,
+    "encry": true
+}

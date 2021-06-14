@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "html-loader": "^2.1.2",
-    "raw-loader": "^4.0.2"
+    "raw-loader": "^4.0.2",
+    "sjcl": "^1.0.8"
   }
 }

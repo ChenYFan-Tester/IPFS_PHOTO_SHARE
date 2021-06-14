@@ -17,6 +17,12 @@ const gres = (c) => {
             },
         })
 
+    } else if (c.type == "js") {
+        return new Response(c.ctx, {
+            headers: {
+                "Content-Type": "application/javascript; charset=utf-8"
+            }
+        })
     } else {
         return new Response(c.ctx)
     }
