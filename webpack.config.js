@@ -6,6 +6,7 @@ module.exports = {
         filename: 'index.min.js'
     },
     optimization: {
-        minimize: false
+        //minimize: false
+        minimize: true
     }
 }

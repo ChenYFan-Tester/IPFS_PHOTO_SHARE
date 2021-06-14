@@ -72,11 +72,11 @@ async function ipfscloud(req) {
                                 await KV.put('PHOTOSHARE', JSON.stringify(SHARELIST))
                                 return gres({ type: "json", ctx: { code: 0, success: true } })
                             } else {
-                                return gres({ type: "json", ctx: { code: -1, success: false,length:Number(res.Name.length),accept:accept_length }, msg: "这文件的名字有点长" })
+                                return gres({ type: "json", ctx: { code: -1, success: false, length: Number(res.Name.length), accept: accept_length }, msg: "这文件的名字有点长" })
 
                             }
                         } else {
-                            return gres({ type: "json", ctx: { code: -1, success: false ,size:Number(res.Size),accept:accept_size}, msg: "这文件太大了" })
+                            return gres({ type: "json", ctx: { code: -1, success: false, size: Number(res.Size), accept: accept_size }, msg: "这文件太大了" })
                         }
                     }
                 }
@@ -113,6 +113,8 @@ async function ipfscloud(req) {
                 ,
                 type: "html"
             })
+        default:
+            return new Response('ERROR')
     }
 }
 
