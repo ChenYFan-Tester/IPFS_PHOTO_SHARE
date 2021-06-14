@@ -2,7 +2,7 @@
 
 本来只是自己随手写的一个小项目，也没想着怎么规范化，只是怎么方便怎么来，没想到会这么多人想搭建。
 
-稍微重写了一下，目前搭建就是直接把`[./dist/index.min.js](https://github.com/ChenYFan-Tester/ipfscloud/blob/main/dist/index.min.js)`复制到Worker框里面，然后配置。
+稍微重写了一下，目前搭建就是直接把[./dist/index.min.js](https://github.com/ChenYFan-Tester/ipfscloud/blob/main/dist/index.min.js)复制到Worker框里面，然后配置。
 
 # 配置过程
 
