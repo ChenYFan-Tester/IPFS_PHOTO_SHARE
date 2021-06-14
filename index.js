@@ -60,11 +60,19 @@ async function ipfscloud(req) {
                 const SHARELIST = await KV.get('PHOTOSHARE', { type: "json" })
                 const res = await (await (fetch(upload_url, req))).json()
                 //return new Response(JSON.stringify(res))
+                try{
                 SHARELIST.push({
                     hash: res.Hash,
                     name: res.Name,
                     size: res.Size
-                })
+                })}catch(p){
+                    SHARELIST = []
+                    SHARELIST.push({
+                        hash: res.Hash,
+                        name: res.Name,
+                        size: res.Size
+                    })
+                }
                 for (var i in accept_suffix) {
                     if (res.Name.endsWith(accept_suffix[i])) {
                         if (Number(res.Size) <= accept_size) {
