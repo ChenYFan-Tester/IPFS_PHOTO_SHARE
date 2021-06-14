@@ -15,7 +15,9 @@
 
 ## 设置变量
 
-KV的写入次数是有限的，避免被滥用和盗刷，我们强制开启了人机验证模块[RECAPTCHA V3无感知评分](https://www.google.com/recaptcha/)，请设置变量：
+KV的写入次数是有限的，避免被滥用和盗刷，我们强制开启了人机验证模块[reCAPTCHA V3无感知评分](https://www.google.com/recaptcha/)。
+
+请先[注册reCAPTCHA](https://g.co/recaptcha/v3)(需要梯子)，选择类型为"reCAPTCHA第3版",之后将获得的密钥设置至Workers变量。
 
 |变量名|变量内容|
 |---|---|
