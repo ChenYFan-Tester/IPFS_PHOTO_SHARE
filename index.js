@@ -1,6 +1,6 @@
 import sjcl from 'sjcl'
 import index from 'html-loader!./index.html'
-import { accept_suffix, accept_length, accept_size, upload_url, recap_mirror, encry,ipfs_url } from './config.json'
+import { accept_suffix, accept_length, accept_size, upload_url, recap_mirror, encry, ipfs_url } from './config.json'
 import init from 'raw-loader!./html/init.html'
 import currentinit from 'html-loader!./html/currentinit.html'
 import gres from './src/gres'
@@ -44,7 +44,7 @@ async function ipfscloud(req) {
                 type: "js"
             })
         case '/upload':
-            
+
             if (!sq('token')) {
                 return gres({ type: "json", ctx: { code: -1, success: false }, msg: "人机验证结果不存在！" })
             }
@@ -57,22 +57,21 @@ async function ipfscloud(req) {
             }
 
             try {
-                const SHARELIST = await KV.get('PHOTOSHARE', { type: "json" })
+                const KVLIST = await KV.get('PHOTOSHARE')
+                let SHARELIST
+                if (KVLIST === null) {
+                    SHARELIST = []
+                } else {
+                    SHARELIST = JSON.parse(KVLIST)
+                }
                 const res = await (await (fetch(upload_url, req))).json()
                 //return new Response(JSON.stringify(res))
-                try{
+
                 SHARELIST.push({
                     hash: res.Hash,
                     name: res.Name,
                     size: res.Size
-                })}catch(p){
-                    SHARELIST = []
-                    SHARELIST.push({
-                        hash: res.Hash,
-                        name: res.Name,
-                        size: res.Size
-                    })
-                }
+                })
                 for (var i in accept_suffix) {
                     if (res.Name.endsWith(accept_suffix[i])) {
                         if (Number(res.Size) <= accept_size) {
@@ -90,7 +89,7 @@ async function ipfscloud(req) {
                 }
                 return gres({ type: "json", ctx: { code: -1, success: false }, msg: "不合法的后缀" })
             } catch (t) {
-                return gres({ type: "json", ctx: { code: -1, success: false }, msg: JSON.stringify(t) })
+                return gres({ type: "json", ctx: { code: -1, success: false }, msg: t })
             }
         case '/':
             let piclist = []
@@ -112,7 +111,7 @@ async function ipfscloud(req) {
                         piclist.push(SHARELIST[i].hash)
                     }
                 }
-                return y.replace(/<!--EN-->/g,encry?'true':'false')
+                return y.replace(/<!--EN-->/g, encry ? 'true' : 'false')
             })()}`
             return gres({
                 ctx: index
